@@ -57,19 +57,16 @@ mod erc20 {
     impl Erc20 {
         /// Create a new ERC-20 contract with an initial supply.
         #[ink(constructor)]
-        pub fn new(initial_supply: Balance) -> Self {
+        pub fn new() -> Self {
             // Initialize mapping for the contract.
             ink_lang::utils::initialize_contract(|contract| {
-                Self::new_init(contract, initial_supply)
+                Self::new_init(contract, 1_000_000_000_000)
             })
         }
 
         /// Initialize the ERC-20 contract with the specified initial supply.
         fn new_init(&mut self, initial_supply: Balance) {
             let caller = Self::env().caller();
-            if initial_supply == 0 || initial_supply == 1 {
-                initial_supply = 1000000000000
-            }
             self.balances.insert(&caller, &initial_supply);
             self.total_supply = initial_supply;
             Self::env().emit_event(Transfer {
